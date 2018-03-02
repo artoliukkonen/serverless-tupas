@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Serverless TUPAS example</title>
+  <style>
+    .tupas-button {
+      float: left;
+    }
+    .tupas-button input[type="submit"] {
+      background-position: center 1rem;
+      background-repeat: no-repeat;
+      padding: 5rem 1rem 1rem;
+      margin: 1rem;
+      text-align: center;
+      width: 10rem;
+      cursor: pointer;
+    }
+    .tupas-bank-poppankki { background-image: url('./images/logo_poppankki.png'); }
+    .tupas-bank-alandsbanken { background-image: url('./images/logo_alandsbanken.gif'); }
+    .tupas-bank-handelsbanken { background-image: url('./images/logo_handelsbanken.gif'); }
+    .tupas-bank-nordea { background-image: url('./images/logo_nordea.gif'); }
+    .tupas-bank-omasp { background-image: url('./images/logo_omasp.png'); }
+    .tupas-bank-op { background-image: url('./images/logo_op.jpg'); }
+    .tupas-bank-s_pankki { background-image: url('./images/logo_s_pankki.gif'); }
+    .tupas-bank-sp { background-image: url('./images/logo_sp.png'); }
+    .tupas-bank-sppop { background-image: url('./images/logo_sppop.gif'); }
+  </style>
+</head>
+<body>
+
+  <p>This page expects you to have serverless-tupas project running in offline mode on port 3000.</p>
+
+  <div class="banks" />
+
+<script>
+const bankButton = (bank) => `<form method="POST" action="${bank.bankAuthUrl}" class="tupas-button">
+  <input type="submit" class="tupas-bank-${bank.id}" value="${bank.name}">
+  <input name="A01Y_ACTION_ID" type="hidden" value="${bank.messageType}">
+  <input name="A01Y_VERS" type="hidden" value="${bank.version}">
+  <input name="A01Y_RCVID" type="hidden" value="${bank.vendorId}">
+  <input name="A01Y_LANGCODE" type="hidden" value="${bank.languageCode}">
+  <input name="A01Y_STAMP" type="hidden" value="${bank.identifier}">
+  <input name="A01Y_IDTYPE" type="hidden" value="${bank.idType}">
+  <input name="A01Y_RETLINK" type="hidden" value="${bank.returnLink}">
+  <input name="A01Y_CANLINK" type="hidden" value="${bank.cancelLink}">
+  <input name="A01Y_REJLINK" type="hidden" value="${bank.rejectLink}">
+  <input name="A01Y_KEYVERS" type="hidden" value="${bank.keyVersion}">
+  <input name="A01Y_ALG" type="hidden" value="${bank.algorithmType}">
+  <input name="A01Y_MAC" type="hidden" value="${bank.mac}">
+  </form>
+`;
+
+fetch('http://localhost:3000/')
+  .then(res => res.json())
+  .then(res => {
+    const banks = [];
+    res.forEach(bank => {
+      banks.push(bankButton(bank));
+    });
+    document.querySelector('.banks').innerHTML = (banks.join(''));
+  });
+</script>
+
+</body>
+</html>
+

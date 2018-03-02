@@ -1,0 +1,41 @@
+service: serverless-tupas
+
+custom:
+  prod:
+    GW_URL: { "Fn::Join" : ["", [ "https://", { "Ref" : "ApiGatewayRestApi" }, ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.environment.SERVERLESS_STAGE}" ] ]  }
+  dev:
+    GW_URL: "http://localhost:3000/"
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: eu-west-1
+  environment:
+    SERVERLESS_STAGE: ${opt:stage, self:provider.stage}
+    SERVERLESS_PROJECT: ${self:service}
+    SERVERLESS_REGION: ${opt:region, self:provider.region}
+    GW_URL: ${self:custom.${self:provider.environment.SERVERLESS_STAGE}.GW_URL}
+
+functions:
+  tupasRequest:
+    handler: handler.request
+    events:
+      - http:
+          path: /
+          method: get
+          cors: true
+      - http:
+          path: /ok
+          method: get
+          cors: true
+      - http:
+          path: /cancel
+          method: get
+          cors: true
+      - http:
+          path: /reject
+          method: get
+          cors: true
+plugins:
+  - serverless-webpack
+  - serverless-offline
