@@ -2,10 +2,6 @@
 
 TUPAS identification module for NodeJS built on Serverless framework.
 
-## Why only one handler?
-
-Keeping all code in one Lambda helps you to keep your code "warm" without need for other hacks. It also reduces the amount of AWS specific boilerplate code and keeps it in one place. 
-
 # Getting started
 
 ## Install service & dependencies
